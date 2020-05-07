@@ -12,10 +12,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import sys
-import imp
+
 import os
-import __builtin__
+import imp
+import sys
+
+PY2 = sys.version_info[0] == 2
+
+if PY2:
+    import __builtin__ as builtins
+else:
+    import builtins
 
 
 class _OurImporter(object):
@@ -86,7 +93,7 @@ def _check_import(dir_name):
 def register_callback():
     sys.path_hooks.append(_check_import)
 
-    save_import = __builtin__.__import__
+    save_import = builtins.__import__
 
     def new_import(*argv, **kwargs):
         try:
@@ -104,4 +111,4 @@ def register_callback():
 
         return module
 
-    __builtin__.__import__ = new_import
+    builtins.__import__ = new_import
