@@ -77,8 +77,11 @@ class _OurFinder(object):
 
             if os.path.isdir(full_name):
                 if not os.path.isfile(dir_root + "/" + "__init__.py"):
-                    with open(dir_root + "/" + "__init__.py", 'a+') as file:
-                        file.write("# Created by importer")
+                    try:
+                        with open(dir_root + "/" + "__init__.py", 'a+') as file:
+                            file.write("# Created by importer")
+                    except PermissionError:
+                        continue
                     return _OurImporter(dir_root, False)
 
                 return _OurImporter(full_name, True)
